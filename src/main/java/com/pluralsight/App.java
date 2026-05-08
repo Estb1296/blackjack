@@ -53,6 +53,8 @@ public class App {
 
             // assigning the player to their hand(dealing)
             deal(players, deck, dealer);
+            //asking if the player's want to hit turn by turn
+            //Made the dealer to auto hit until 17 is reached at least
             hit(players, deck, dealer);
 
             ArrayList<Integer> allHands = new ArrayList<>();
