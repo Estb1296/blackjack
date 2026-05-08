@@ -1,6 +1,7 @@
 package com.pluralsight;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class App {
@@ -10,9 +11,19 @@ public class App {
 
         boolean isPlaying = true;
         while (isPlaying) {
+            int numberOfPlayers=0;
+            boolean validInput=true;
+            try{
+            while(validInput){
             System.out.println("Enter the number of players");
-            int numberOfPlayers = input.nextInt();
+             numberOfPlayers = input.nextInt();
             input.nextLine();
+            validInput=false;
+            }
+            }catch(InputMismatchException e){
+                System.out.println("Invalid Input!Please try again.");
+                input.nextLine();
+            }
             ArrayList<Player> players = new ArrayList<>();
             for(int i = 0; i < numberOfPlayers; i++) {
                 System.out.println("Enter name for Player " + (i + 1) + ": ");
@@ -30,26 +41,14 @@ public class App {
             deck.shuffle();
             
             // assigning the player to their hand(dealing)
-            for (int i = 0; i < 2; i++) {
-                for (Player player : players) {
-                    player.getHand().deal(deck.deal());
-                }
-                dealer.getHand().deal(deck.deal());
-            }
+            deal(players, deck, dealer);
 
             ArrayList<Integer> allHands=new ArrayList<>();
             //getting the point value of each hand
-            for(Player player : players) {
-                allHands.add(player.getHandValue());
-            }
-            allHands.add(dealer.getHandValue());
+            getPointValue(players, allHands, dealer);
 
             int closest = allHands.get(0);
-            for(int value : allHands) {
-                if(value <= 21 && Math.abs(21 - value) < Math.abs(21 - closest)) {
-                    closest = value;
-                }
-            }
+            closest = getWinner(allHands, closest);
             for (Player player : players) {
                 System.out.println(player.getName() + " hand is worth: " + player.getHandValue());
             }
@@ -80,7 +79,7 @@ public class App {
 //            if(value <= 21 && Math.abs(21 - value) < Math.abs(21 - closest)) {
 //                closest = value;
 //            }
-//        }
+
 //        System.out.println("Closest to 21: " + closest);
 //        System.out.println("This hand is worth: " + handValue);
 //        System.out.println("This hand is worth: " + handSecondValue);
@@ -116,6 +115,31 @@ public class App {
 //        if(player.getValue() == 21) {
 //            System.out.println("Blackjack! Player wins!");
 //        }
+        }
+    }
+
+    private static int getWinner(ArrayList<Integer> allHands, int closest) {
+        for(int value : allHands) {
+            if(value <= 21 && Math.abs(21 - value) < Math.abs(21 - closest)) {
+                closest = value;
+            }
+        }
+        return closest;
+    }
+
+    private static void getPointValue(ArrayList<Player> players, ArrayList<Integer> allHands, Player dealer) {
+        for(Player player : players) {
+            allHands.add(player.getHandValue());
+        }
+        allHands.add(dealer.getHandValue());
+    }
+
+    private static void deal(ArrayList<Player> players, Deck deck, Player dealer) {
+        for (int i = 0; i < 2; i++) {
+            for (Player player : players) {
+                player.getHand().deal(deck.deal());
+            }
+            dealer.getHand().deal(deck.deal());
         }
     }
 }
