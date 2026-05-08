@@ -6,6 +6,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class App {
+
+
     static Scanner input = new Scanner(System.in);
     static final String GREEN = "\u001B[32m";
     static final String RESET = "\u001B[0m";
@@ -39,43 +41,30 @@ public class App {
                     System.out.println(e.getMessage());
                 }
             }
-            ArrayList<Player> players = new ArrayList<>();
-            for (int i = 0; i < numberOfPlayers; i++) {
-                System.out.println("Enter name for Player " + (i + 1) + ": ");
+            Game game= new Game();
+            ArrayList<Hand> allHands = game.allHands;
+            Deck deck=game.deck;
+            Player dealer=game.dealer;
+            ArrayList<Player>players= game.getPlayer();
 
-                String playerName = input.nextLine();
-                players.add(new Player(playerName));
-            }
-            Player dealer = new Player("Dealer");
-
-            Deck deck = new Deck();
-            deck.shuffle();
+            game.getPromptPlayerName(numberOfPlayers);
 
             // assigning the player to their hand(dealing)
-            deal(players, deck, dealer);
+
+            game.deal( players, deck, dealer);
+
             //asking if the player's want to hit turn by turn
             //Made the dealer to auto hit until 17 is reached at least
-            hit(players, deck, dealer);
 
-            ArrayList<Integer> allHands = new ArrayList<>();
+            game.hit(players, deck, dealer);
+
             //getting the point value of each hand
-            getPointValue(players, allHands, dealer);
+            game.getPointValue(players, allHands,dealer);
 
-            int closest = allHands.get(0);
-            closest = getWinner(allHands, closest);
-            displayHandWorth(players, dealer);
-            for (Player player : players) {
-                if (player.getHandValue() > 21) {
-                    System.out.println(RED + player.getName() + " busts! ❌" + RESET);
-                } else if (player.getHandValue() == closest) {
-                    System.out.println(GREEN + player.getName() + " wins! 🏆" + RESET);
-                }
-            }
-            if (dealer.getHandValue() > 21) {
-                System.out.println(RED + "Dealer busts! ❌" + RESET);
-            } else if (dealer.getHandValue() == closest) {
-                System.out.println(GREEN + "Dealer wins! 🏆" + RESET);
-            }
+            int closest = allHands.get(0).getValue();
+            closest = game.getWinner(allHands, closest);
+            game.displayHandWorth(players, dealer);
+            game.decideWinner(players, closest,dealer);
 
             boolean validAnswer = true;
             while (validAnswer) {
@@ -94,83 +83,6 @@ public class App {
                 }
             }
 
-        }
-    }
-
-    private static void hit(ArrayList<Player> players, Deck deck, Player dealer) {
-        for (Player player : players) {
-            boolean playerTurn = true;
-
-            while (playerTurn) {
-                System.out.println(BLUE + player.getName() +
-                        " hand is worth: " + player.getHandValue() + RESET);
-
-                if (player.getHandValue() > 21) {
-                    System.out.println(RED + player.getName() + " busts! ❌" + RESET);
-                    break;
-                }
-
-                if (player.getHandValue() == 21) {
-                    System.out.println(GREEN + player.getName() +
-                            " has Blackjack! 🏆" + RESET);
-                    break;
-                }
-                boolean validChoice = false;
-                while (!validChoice) {
-                    System.out.println(player.getName() + " Hit or Stay? (Hit/Stay): ");
-                    String choice = input.nextLine();
-
-                    if (choice.equalsIgnoreCase("Hit")) {
-                        player.getHand().hit(deck.deal());
-                        validChoice = true;
-                    } else if (choice.equalsIgnoreCase("Stay")) {
-                        playerTurn = false;
-                        validChoice = true;
-                    } else {
-                        System.out.println("Invalid input! Please enter Hit or Stay.");
-                    }
-                }
-            }
-        }
-
-        System.out.println(YELLOW + "Dealer's turn..." + RESET);
-        while (dealer.getHandValue() < 17) {
-            System.out.println(YELLOW + "Dealer hits..." + RESET);
-            dealer.getHand().hit(deck.deal());
-        }
-        System.out.println(YELLOW + "Dealer stays at: " +
-                dealer.getHandValue() + RESET);
-    }
-
-    private static void displayHandWorth(ArrayList<Player> players, Player dealer) {
-        for (Player player : players) {
-            System.out.println(BLUE + player.getName() + " hand is worth: " + player.getHandValue() + RESET);
-        }
-        System.out.println(CYAN + "Dealer hand is worth: " + dealer.getHandValue() + RESET);
-    }
-
-    private static int getWinner(ArrayList<Integer> allHands, int closest) {
-        for (int value : allHands) {
-            if (value <= 21 && Math.abs(21 - value) < Math.abs(21 - closest)) {
-                closest = value;
-            }
-        }
-        return closest;
-    }
-
-    private static void getPointValue(ArrayList<Player> players, ArrayList<Integer> allHands, Player dealer) {
-        for (Player player : players) {
-            allHands.add(player.getHandValue());
-        }
-        allHands.add(dealer.getHandValue());
-    }
-
-    private static void deal(ArrayList<Player> players, Deck deck, Player dealer) {
-        for (int i = 0; i < 2; i++) {
-            for (Player player : players) {
-                player.getHand().deal(deck.deal());
-            }
-            dealer.getHand().deal(deck.deal());
         }
     }
 }
