@@ -1,23 +1,13 @@
 package com.pluralsight;
 
 public class Card {
-    private final String suit;
+
     private final String value;
     private boolean isFaceUp;
 
-    public Card(String suit, String value) {
-        this.suit = suit;
+    public Card(String value) {
         this.value = value;
         this.isFaceUp = false;
-    }
-
-    public String getSuit() {
-        // only return the suit if the card is face up
-        if (isFaceUp) {
-            return suit;
-        } else {
-            return "#";
-        }
     }
     public int getPointValue() {
         if (!isFaceUp) {
@@ -36,11 +26,6 @@ public class Card {
         // numeric cards equal their face value
         return Integer.parseInt(value);
     }
-
-    public boolean isFaceUp() {
-        return isFaceUp;
-    }
-
     public void flip() {
         isFaceUp = !isFaceUp;
     }
