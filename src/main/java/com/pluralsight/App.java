@@ -9,17 +9,10 @@ public class App {
 
 
     static Scanner input = new Scanner(System.in);
-    static final String GREEN = "\u001B[32m";
-    static final String RESET = "\u001B[0m";
-    static final String RED = "\u001B[31m";
-    static final String BLUE = "\u001B[34m";
-    static final String CYAN = "\u001B[36m";
-    static final String YELLOW = "\u001B[33m";
 
     public static void main(String[] args) {
         blackjackGameDisplay();
     }
-
     private static void blackjackGameDisplay() {
         boolean isPlaying = true;
         while (isPlaying) {
@@ -41,17 +34,18 @@ public class App {
                     System.out.println(e.getMessage());
                 }
             }
-            Game game= new Game();
+            Game game = new Game();
             ArrayList<Hand> allHands = game.allHands;
-            Deck deck=game.deck;
-            Player dealer=game.dealer;
-            ArrayList<Player>players= game.getPlayer();
+            Deck deck = game.deck;
+            Player dealer = game.dealer;
+            ArrayList<Player> players = game.getPlayer();
 
             game.getPromptPlayerName(numberOfPlayers);
 
             // assigning the player to their hand(dealing)
 
-            game.deal( players, deck, dealer);
+            game.deal(players, deck, dealer);
+           // game.displayAllCards(dealer);
 
             //asking if the player's want to hit turn by turn
             //Made the dealer to auto hit until 17 is reached at least
@@ -59,12 +53,12 @@ public class App {
             game.hit(players, deck, dealer);
 
             //getting the point value of each hand
-            game.getPointValue(players, allHands,dealer);
+            game.getPointValue(players, allHands, dealer);
 
             int closest = allHands.get(0).getValue();
             closest = game.getWinner(allHands, closest);
             game.displayHandWorth(players, dealer);
-            game.decideWinner(players, closest,dealer);
+            game.decideWinner(players, closest, dealer);
 
             boolean validAnswer = true;
             while (validAnswer) {

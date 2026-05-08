@@ -8,24 +8,41 @@ public class Deck {
 
     public Deck() {
         cards = new ArrayList<>();
-        String[] values = {"2", "3", "4", "5", "6", "7", "8",
-                "9", "10", "J", "Q", "K", "A"};
-        for(String value: values){
-            Card card = new Card(value);
-            cards.add(card);
+        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+        String[] values = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
+        for(String suit : suits) {
+            for(String value : values) {
+                cards.add(new Card(suit, value));
+            }
         }
 }
     public void shuffle(){
         Collections.shuffle(cards);
     }
     public Card deal(){
-        // deal the top card (if there are any cards left
         if(!cards.isEmpty()){
             return cards.remove(0);
         } else {
             return null;
         }
     }
+
+
+    public boolean isEmpty() {
+        return cards.isEmpty();
+    }
+    public void reshuffle() {
+        cards.clear();
+        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+        String[] values = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
+        for(String suit:suits){
+            for(String value : values) {
+                cards.add(new Card(suit,value));
+            }
+        }
+        Collections.shuffle(cards); // ✅ shuffle fresh deck
+    }
+
 }
 
 
