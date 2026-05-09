@@ -15,23 +15,31 @@ public class Hand {
     public void deal(Card card){
         cards.add(card);
     }
-    // The Hand uses the methods of each card to determine
-    // the value of each card - and adds up all values
-    public int getValue(){
-        int value = 0;
-        for (Card card : cards) {
+
+    public int getValue() {
+        // ✅ tracks if hand changed
+        boolean valueChanged = true;
+        // The Hand uses the methods of each card to determine
+        // the value of each card - and adds up all values
+        // -1 means not calculated yet
+        int cachedValue = -1;
+        if(!valueChanged) return cachedValue;
+        int total = 0;
+        for(Card card : cards) {
             card.flip();
-            if(card.getValue().equals("A")) {
+
+            // ✅ only ask if ace value not yet chosen
+            if(card.getValue().equals("A") && card.getChosenAceValue() == 11) {
                 System.out.println("You have an Ace! Choose value:");
                 System.out.println("1 - Count as 1");
                 System.out.println("11 - Count as 11");
 
-                int aceChoice = 0;
                 boolean validChoice = false;
                 while(!validChoice) {
                     try {
-                        aceChoice = Integer.parseInt(input.nextLine().trim());
+                        int aceChoice = Integer.parseInt(input.nextLine().trim());
                         if(aceChoice == 1 || aceChoice == 11) {
+                            card.setChosenAceValue(aceChoice);
                             validChoice = true;
                         } else {
                             System.out.println("Please enter 1 or 11");
@@ -40,25 +48,16 @@ public class Hand {
                         System.out.println("Invalid input! Please enter 1 or 11");
                     }
                 }
-                value += card.getPointValue(aceChoice); // ✅ uses player choice
-            } else {
-               value += card.getPointValue(11); // ✅ non ace cards ignore aceValue
             }
+
+            total += card.getPointValue(); // ✅ uses stored value, no parameter needed
             card.flip();
         }
-        return value;
-
+        return total;
     }
     public void hit(Card card) {
         cards.add(card);
     }
-//    public void displayCards() {
-//        for(Card card : cards) {
-//            card.flip(); // face up
-//            System.out.println(card.getValue() + " of " + card.getSuit());
-//            card.flip(); // face down
-//        }
-//    }
     public void displayFirstCard() {
         Card firstCard = cards.get(0); //  only get first card
         firstCard.flip();              // flip to see it

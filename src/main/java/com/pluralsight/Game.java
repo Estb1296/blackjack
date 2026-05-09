@@ -42,23 +42,12 @@ public class Game {
                 player.getHandValue() + RESET);
         System.out.println("-------------------------------");
     }
-//    public void displayAllCards(Player dealer) {
-//        // show one card per player publicly
-//        for(Player player : players) {
-//            System.out.println(BLUE + player.getName() +
-//                    "'s visible card:" + RESET);
-//            player.getHand().displayFirstCard(); // one card only
-//        }
-//
-//        // dealer shows one card face up, one hidden
-//        System.out.println(CYAN + "Dealer's visible card:" + RESET);
-//        dealer.getHand().displayFirstCard();
-//        System.out.println(CYAN + "Dealer's second card: [hidden]" + RESET);
-//    }
 
     public void hit(ArrayList<Player> players, Deck deck, Player dealer) {
+        clearConsole();
         System.out.println("=== Table ===");
-        for(Player p : players) {  //use different variable name like p
+        for(Player p : players) {
+            //use different variable name like p
             System.out.println(BLUE + p.getName() + "'s visible card:" + RESET);
             p.getHand().displayFirstCard();
         }
@@ -66,8 +55,10 @@ public class Game {
         dealer.getHand().displayFirstCard();
         System.out.println(CYAN + "Dealer's second card: [hidden] 🂠" + RESET);
         for(Player player : players) {
+            clearConsole();
             boolean playerTurn = true;
             displayPrivateValue(player);
+            clearConsole();
             while (playerTurn) {
                 if(deck.isEmpty()) {
                     System.out.println(YELLOW + "Reshuffling deck..." + RESET);
@@ -86,6 +77,7 @@ public class Game {
                     break;
                 }
                 boolean validChoice = false;
+                clearConsole();
                 while (!validChoice) {
                     System.out.println(player.getName() + " Hit or Stay? (Hit/Stay): ");
                     String choice = input.nextLine().trim();
@@ -172,5 +164,9 @@ public class Game {
     }
 
     private record promptPlayerName(ArrayList<Player> players, Player dealer) {
+    }
+    public void clearConsole() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 }

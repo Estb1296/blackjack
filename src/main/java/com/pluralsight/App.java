@@ -41,25 +41,26 @@ public class App {
             ArrayList<Player> players = game.getPlayer();
 
             game.getPromptPlayerName(numberOfPlayers);
-
             // assigning the player to their hand(dealing)
 
             game.deal(players, deck, dealer);
            // game.displayAllCards(dealer);
 
+
             //asking if the player's want to hit turn by turn
             //Made the dealer to auto hit until 17 is reached at least
 
             game.hit(players, deck, dealer);
+            game.clearConsole();
 
             //getting the point value of each hand
             game.getPointValue(players, allHands, dealer);
 
             int closest = allHands.get(0).getValue();
             closest = game.getWinner(allHands, closest);
+            game.clearConsole();
             game.displayHandWorth(players, dealer);
             game.decideWinner(players, closest, dealer);
-
             boolean validAnswer = true;
             while (validAnswer) {
                 System.out.println("Do you wanna keep playing");

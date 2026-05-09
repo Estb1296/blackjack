@@ -5,26 +5,18 @@ public class Card {
     private final String value;
     private final String suit;
     private boolean isFaceUp;
+    private int chosenAceValue = 11;
 
     public Card(String suit, String value) {
         this.value = value;
         this.isFaceUp = false;
         this.suit=suit;
     }
-    public int getPointValue(int aceValue) {
-        if (!isFaceUp) {
-            return 0;
-        }
 
-        // A = 11 or 1 depending on what the user picked.
-        if (value.equals("A")) {
-            return aceValue;
-        }
-        if (value.equals("K") || value.equals("Q") || value.equals("J")) {
-            return 10;
-        }
-
-        // numeric cards equal their face value
+    public int getPointValue() {
+        if(!isFaceUp) return 0;
+        if(value.equals("A")) return chosenAceValue; // ✅ uses stored value
+        if(value.equals("K") || value.equals("Q") || value.equals("J")) return 10;
         return Integer.parseInt(value);
     }
     public void flip() {
@@ -37,5 +29,13 @@ public class Card {
 
     public String getValue() {
         return value;
+    }
+
+    public int getChosenAceValue() {
+        return chosenAceValue;
+    }
+
+    public void setChosenAceValue(int chosenAceValue) {
+        this.chosenAceValue = chosenAceValue;
     }
 }
