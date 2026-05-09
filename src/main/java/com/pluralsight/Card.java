@@ -10,15 +10,16 @@ public class Card {
     public Card(String suit, String value) {
         this.value = value;
         this.isFaceUp = false;
-        this.suit=suit;
+        this.suit = suit;
     }
 
     public int getPointValue() {
-        if(!isFaceUp) return 0;
-        if(value.equals("A")) return chosenAceValue; // ✅ uses stored value
-        if(value.equals("K") || value.equals("Q") || value.equals("J")) return 10;
+        if (!isFaceUp) return 0;
+        if (value.equals("A")) return chosenAceValue; // ✅ uses stored value
+        if (value.equals("K") || value.equals("Q") || value.equals("J")) return 10;
         return Integer.parseInt(value);
     }
+
     public void flip() {
         isFaceUp = !isFaceUp;
     }

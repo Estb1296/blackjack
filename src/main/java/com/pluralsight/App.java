@@ -13,6 +13,7 @@ public class App {
     public static void main(String[] args) {
         blackjackGameDisplay();
     }
+
     private static void blackjackGameDisplay() {
         boolean isPlaying = true;
         while (isPlaying) {
@@ -44,7 +45,7 @@ public class App {
             // assigning the player to their hand(dealing)
 
             game.deal(players, deck, dealer);
-           // game.displayAllCards(dealer);
+            // game.displayAllCards(dealer);
 
 
             //asking if the player's want to hit turn by turn

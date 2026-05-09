@@ -34,6 +34,7 @@ public class Game {
             dealer.getHand().deal(deck.deal());
         }
     }
+
     public void displayPrivateValue(Player player) {
         // feels like only that player is seeing their score
         System.out.println("-------------------------------");
@@ -46,7 +47,7 @@ public class Game {
     public void hit(ArrayList<Player> players, Deck deck, Player dealer) {
         clearConsole();
         System.out.println("=== Table ===");
-        for(Player p : players) {
+        for (Player p : players) {
             //use different variable name like p
             System.out.println(BLUE + p.getName() + "'s visible card:" + RESET);
             p.getHand().displayFirstCard();
@@ -54,13 +55,13 @@ public class Game {
         System.out.println(CYAN + "Dealer's visible card:" + RESET);
         dealer.getHand().displayFirstCard();
         System.out.println(CYAN + "Dealer's second card: [hidden] 🂠" + RESET);
-        for(Player player : players) {
+        for (Player player : players) {
             clearConsole();
             boolean playerTurn = true;
             displayPrivateValue(player);
             clearConsole();
             while (playerTurn) {
-                if(deck.isEmpty()) {
+                if (deck.isEmpty()) {
                     System.out.println(YELLOW + "Reshuffling deck..." + RESET);
                     deck.reshuffle();
                 }
@@ -82,10 +83,10 @@ public class Game {
                     System.out.println(player.getName() + " Hit or Stay? (Hit/Stay): ");
                     String choice = input.nextLine().trim();
 
-                    if(choice.equalsIgnoreCase("Hit")) {
+                    if (choice.equalsIgnoreCase("Hit")) {
                         player.getHand().hit(deck.deal());
                         validChoice = true;
-                    } else if(choice.equalsIgnoreCase("Stay")) {
+                    } else if (choice.equalsIgnoreCase("Stay")) {
                         playerTurn = false;
                         validChoice = true;
                     } else {
@@ -94,7 +95,7 @@ public class Game {
 
                     // ✅ outside if/else — runs after BOTH hit and stay
 
-                    if(validChoice) {
+                    if (validChoice) {
                         System.out.println(BLUE + player.getName() + "'s cards:" + RESET);
                         player.getHand().displayFullHand();
                         System.out.println(BLUE + player.getName() +
@@ -165,6 +166,7 @@ public class Game {
 
     private record promptPlayerName(ArrayList<Player> players, Player dealer) {
     }
+
     public void clearConsole() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
