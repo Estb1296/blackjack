@@ -2,20 +2,21 @@ package com.pluralsight;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-import static com.pluralsight.App.*;
 
 public class Game {
-    private final ArrayList<Player> players = new ArrayList<>();
-    public final Deck deck;
-    final Player dealer;
-    public final ArrayList<Hand> allHands;
     static final String GREEN = "\u001B[32m";
     static final String RESET = "\u001B[0m";
     static final String RED = "\u001B[31m";
     static final String BLUE = "\u001B[34m";
     static final String CYAN = "\u001B[36m";
     static final String YELLOW = "\u001B[33m";
+    private static final Scanner input = new Scanner(System.in);
+    public final Deck deck;
+    public final ArrayList<Hand> allHands;
+    final Player dealer;
+    private final ArrayList<Player> players = new ArrayList<>();
 
     Game() {
         this.allHands = new ArrayList<>();
@@ -164,11 +165,11 @@ public class Game {
         new promptPlayerName(players, dealer);
     }
 
-    private record promptPlayerName(ArrayList<Player> players, Player dealer) {
-    }
-
     public void clearConsole() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
+    }
+
+    private record promptPlayerName(ArrayList<Player> players, Player dealer) {
     }
 }

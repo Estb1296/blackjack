@@ -1,14 +1,14 @@
 package com.pluralsight;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
-import static com.pluralsight.App.input;
 
 public class Hand {
     private final ArrayList<Card> cards;
     private int cachedValue = -1;
     private boolean valueChanged = true;//make sure the value of ace is stored through instances of the hand object
-
+    private static final Scanner input=new Scanner(System.in);
     public Hand() {
         cards = new ArrayList<>();
     }
