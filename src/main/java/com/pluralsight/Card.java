@@ -5,7 +5,6 @@ public class Card {
     private final String value;
     private final String suit;
     private boolean isFaceUp;
-    private int chosenAceValue = 11;
 
     public Card(String suit, String value) {
         this.value = value;
@@ -15,7 +14,7 @@ public class Card {
 
     public int getPointValue() {
         if (!isFaceUp) return 0;
-        if (value.equals("A")) return chosenAceValue; // ✅ uses stored value
+        if (value.equals("A")) return getChosenAceValue(); // ✅ uses stored value
         if (value.equals("K") || value.equals("Q") || value.equals("J")) return 10;
         return Integer.parseInt(value);
     }
@@ -33,10 +32,7 @@ public class Card {
     }
 
     public int getChosenAceValue() {
-        return chosenAceValue;
+        return 11;
     }
 
-    public void setChosenAceValue(int chosenAceValue) {
-        this.chosenAceValue = chosenAceValue;
-    }
 }

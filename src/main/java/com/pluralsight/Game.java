@@ -36,31 +36,28 @@ public class Game {
         }
     }
 
-    public void displayPrivateValue(Player player) {
-        // feels like only that player is seeing their score
-        System.out.println("-------------------------------");
-        System.out.println(GREEN + player.getName() +
-                " your hand is worth: " +
-                player.getHandValue() + RESET);
-        System.out.println("-------------------------------");
-    }
-
     public void hit(ArrayList<Player> players, Deck deck, Player dealer) {
-        clearConsole();
+        // Display the initial table for 10 seconds
         System.out.println("=== Table ===");
         for (Player p : players) {
-            //use different variable name like p
             System.out.println(BLUE + p.getName() + "'s visible card:" + RESET);
             p.getHand().displayFirstCard();
         }
         System.out.println(CYAN + "Dealer's visible card:" + RESET);
         dealer.getHand().displayFirstCard();
         System.out.println(CYAN + "Dealer's second card: [hidden] 🂠" + RESET);
+
+        // 10 second pause to view the table
+        pauseScreen();
+
+        // Now go through each player individually
         for (Player player : players) {
-            clearConsole();
             boolean playerTurn = true;
-            displayPrivateValue(player);
+
+            // Clear console and show only this player's private hand worth
             clearConsole();
+            //displayPrivateValue(player);
+
             while (playerTurn) {
                 if (deck.isEmpty()) {
                     System.out.println(YELLOW + "Reshuffling deck..." + RESET);
@@ -68,22 +65,21 @@ public class Game {
                 }
                 System.out.println(BLUE + player.getName() +
                         " hand is worth: " + player.getHandValue() + RESET);
-
                 if (player.getHandValue() > 21) {
                     System.out.println(RED + player.getName() + " busts! ❌" + RESET);
+                    clearConsole();
                     break;
                 }
                 if (player.getHandValue() == 21) {
                     System.out.println(GREEN + player.getName() +
                             " has Blackjack! 🏆" + RESET);
+                    clearConsole();
                     break;
                 }
                 boolean validChoice = false;
-                clearConsole();
                 while (!validChoice) {
                     System.out.println(player.getName() + " Hit or Stay? (Hit/Stay): ");
                     String choice = input.nextLine().trim();
-
                     if (choice.equalsIgnoreCase("Hit")) {
                         player.getHand().hit(deck.deal());
                         validChoice = true;
@@ -93,20 +89,14 @@ public class Game {
                     } else {
                         System.out.println("Invalid input! Please enter Hit or Stay.");
                     }
-
-                    // ✅ outside if/else — runs after BOTH hit and stay
-
-                    if (validChoice) {
-                        System.out.println(BLUE + player.getName() + "'s cards:" + RESET);
-                        player.getHand().displayFullHand();
-                        System.out.println(BLUE + player.getName() +
-                                " hand is worth: " +
-                                player.getHandValue() + RESET);
+                    // Clear console after they stay
+                    if (choice.equalsIgnoreCase("Stay")) {
+                        clearConsole();
                     }
+
                 }
             }
         }
-
         System.out.println(YELLOW + "Dealer's turn..." + RESET);
         while (dealer.getHandValue() < 17) {
             System.out.println(YELLOW + "Dealer hits..." + RESET);
@@ -114,6 +104,15 @@ public class Game {
         }
         System.out.println(YELLOW + "Dealer stays at: " +
                 dealer.getHandValue() + RESET);
+    }
+
+    // Add this helper method
+    private void pauseScreen() {
+        try {
+            Thread.sleep(10 * 1000);
+        } catch (InterruptedException e) {
+            System.out.println("Display interrupted");
+        }
     }
 
     public void getPointValue(ArrayList<Player> players, ArrayList<Hand> allHands, Player dealer) {
@@ -134,10 +133,54 @@ public class Game {
         for (Player player : players) {
             if (player.getHandValue() > 21) {
                 System.out.println(RED + player.getName() + " busts! ❌" + RESET);
+            } else if (player.getHandValue() == dealer.getHandValue()) {
+                System.out.println(YELLOW + player.getName() + " pushes with the dealer! 🤝" + RESET);
+
+                // Continue playing until someone wins
+                boolean stillPushing = true;
+                while (stillPushing) {
+                    System.out.println(player.getName() + " Hit or Stay? (Hit/Stay): ");
+                    String choice = input.nextLine().trim();
+
+                    if (choice.equalsIgnoreCase("Hit")) {
+                        player.getHand().hit(deck.deal());
+                        System.out.println(BLUE + player.getName() + " hand is worth: " + player.getHandValue() + RESET);
+
+                        if (player.getHandValue() > 21) {
+                            System.out.println(RED + player.getName() + " busts! ❌" + RESET);
+                            stillPushing = false;
+                        }
+                    } else if (choice.equalsIgnoreCase("Stay")) {
+                        stillPushing = false;
+                    } else {
+                        System.out.println("Invalid input! Please enter Hit or Stay.");
+                    }
+                }
+
+                // Dealer hits until 17
+                while (dealer.getHandValue() < 17) {
+                    dealer.getHand().hit(deck.deal());
+                }
+
+                // Determine final winner
+                if (player.getHandValue() > 21) {
+                    System.out.println(RED + player.getName() + " loses! ❌" + RESET);
+                } else if (dealer.getHandValue() > 21) {
+                    System.out.println(GREEN + player.getName() + " wins! 🏆" + RESET);
+                } else if (player.getHandValue() > dealer.getHandValue()) {
+                    System.out.println(GREEN + player.getName() + " wins! 🏆" + RESET);
+                } else if (player.getHandValue() < dealer.getHandValue()) {
+                    System.out.println(RED + player.getName() + " loses! ❌" + RESET);
+                } else {
+                    System.out.println(YELLOW + player.getName() + " pushes again! 🤝" + RESET);
+                }
             } else if (player.getHandValue() == closest) {
                 System.out.println(GREEN + player.getName() + " wins! 🏆" + RESET);
+            } else {
+                System.out.println(RED + player.getName() + " loses! ❌" + RESET);
             }
         }
+
         if (dealer.getHandValue() > 21) {
             System.out.println(RED + "Dealer busts! ❌" + RESET);
         } else if (dealer.getHandValue() == closest) {

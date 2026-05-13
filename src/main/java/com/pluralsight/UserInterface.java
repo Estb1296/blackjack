@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class UserInterface {
     static Scanner input = new Scanner(System.in);
+
     public void blackjackGameDisplay() {
         boolean isPlaying = true;
         while (isPlaying) {
@@ -34,26 +35,22 @@ public class UserInterface {
             ArrayList<Player> players = game.getPlayer();
 
             game.getPromptPlayerName(numberOfPlayers);
-            // assigning the player to their hand(dealing)
-
             game.deal(players, deck, dealer);
-            // game.displayAllCards(dealer);
 
 
-            //asking if the player's want to hit turn by turn
-            //Made the dealer to auto hit until 17 is reached at least
-
+            // Ask each player to hit or stay
             game.hit(players, deck, dealer);
+
+            // Clear console before showing winner
             game.clearConsole();
 
-            //getting the point value of each hand
+            // Now get point values and display results
             game.getPointValue(players, allHands, dealer);
-
             int closest = allHands.get(0).getValue();
             closest = game.getWinner(allHands, closest);
-            game.clearConsole();
-            game.displayHandWorth(players, dealer);
+
             game.decideWinner(players, closest, dealer);
+            game.displayHandWorth(players, dealer);
             boolean validAnswer = true;
             while (validAnswer) {
                 System.out.println("Do you wanna keep playing");
